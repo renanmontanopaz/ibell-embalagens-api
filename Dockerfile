@@ -6,9 +6,9 @@ FROM openjdk:18-ea-8-jdk-slim
 COPY --from=build /target/ibell-embalagens-api-0.0.1-SNAPSHOT.jar ibell-embalagens-api.jar
 
 # Defina as variáveis de ambiente
-ENV DB_URL=""
-ENV DB_USERNAME=""
-ENV DB_PASSWORD=""
+ENV DB_URL="database-2.cqzsysykskru.us-east-1.rds.amazonaws.com"
+ENV DB_USERNAME="postgres"
+ENV DB_PASSWORD="52354867"
 
 EXPOSE 8080
 
