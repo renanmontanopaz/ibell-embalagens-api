@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./ # Verifique se o Dockerfile do Spring Boot está aqui
+    container_name: meu-app-backend-spring # Nome opcional para o container
+    ports:
+      - "8080:8080" # Mapeia a porta 8080 do container para a VM
+    networks:
+      - app-net
+    depends_on:
+      - database # Garante que o banco inicie antes
+    environment:
+      # --- Variáveis para Conexão com PostgreSQL ---
+      # Use o nome do serviço 'database' como host
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/meu_banco_app # Substitua meu_banco_app se necessário
+      - SPRING_DATASOURCE_USERNAME=usuario_app # Substitua pelo nome de usuário desejado
+      - SPRING_DATASOURCE_PASSWORD=senha_forte_app # Substitua pela senha desejada
+      # Adicione outras variáveis que seu Spring Boot precise
+      # - SERVER_PORT=8080 # Opcional se já for o padrão
+    restart: unless-stopped
+
+  database:
+    image: postgres:14-alpine # Use uma versão específica do Postgres
+    container_name: meu-postgres-db # Nome opcional
+    ports:
+      - "5432:5432" # Mapeia a porta 5432 (útil para debug via SSH)
+    networks:
+      - app-net
+    environment:
+      # --- Criação do Banco e Usuário no PostgreSQL ---
+      - POSTGRES_DB=ibell-embalagens # Nome do banco a ser criado
+      - POSTGRES_USER=postgres # Nome do usuário a ser criado
+      - POSTGRES_PASSWORD=52354867 # Senha para o usuário
+    volumes:
+      - postgres-data:/var/lib/postgresql/data # Persistência dos dados
+    restart: unless-stopped
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  postgres-data: # Define o volume nomeado
