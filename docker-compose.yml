@@ -15,8 +15,8 @@ services:
       # --- Variáveis para Conexão com PostgreSQL ---
       # Use o nome do serviço 'database' como host
       - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/meu_banco_app # Substitua meu_banco_app se necessário
-      - SPRING_DATASOURCE_USERNAME=usuario_app # Substitua pelo nome de usuário desejado
-      - SPRING_DATASOURCE_PASSWORD=senha_forte_app # Substitua pela senha desejada
+      - SPRING_DATASOURCE_USERNAME=postgres # Substitua pelo nome de usuário desejado
+      - SPRING_DATASOURCE_PASSWORD=52354867 # Substitua pela senha desejada
       # Adicione outras variáveis que seu Spring Boot precise
       # - SERVER_PORT=8080 # Opcional se já for o padrão
     restart: unless-stopped
