@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 
 services:
   backend:
@@ -14,7 +14,7 @@ services:
     environment:
       # --- Variáveis para Conexão com PostgreSQL ---
       # Use o nome do serviço 'database' como host
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/meu_banco_app # Substitua meu_banco_app se necessário
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/ibell-embalagens # Substitua meu_banco_app se necessário
       - SPRING_DATASOURCE_USERNAME=postgres # Substitua pelo nome de usuário desejado
       - SPRING_DATASOURCE_PASSWORD=52354867 # Substitua pela senha desejada
       # Adicione outras variáveis que seu Spring Boot precise
