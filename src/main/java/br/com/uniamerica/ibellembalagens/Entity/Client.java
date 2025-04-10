@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-//testando
+//testando mjln
 @Entity
 @Table(name = "tb_client")
 public class Client extends AbstractEntity {
