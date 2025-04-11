@@ -13,11 +13,10 @@ env:
   BACKEND_PROJECT_PATH: /home/renanmphp/ibell-embalagens-api # CAMINHO ABSOLUTO para a pasta do projeto na vm-backend-db (onde está o docker-compose.yml)
 
   # --- Configurações das Imagens Docker (GHCR) ---
-  # Substitua 'SEU_USUARIO_GITHUB' pelo seu nome de usuário ou organização
-  # Substitua 'NOME_DO_REPO' pelo nome do seu repositório
   GHCR_REGISTRY: ghcr.io
   GHCR_IMAGE_OWNER: renanmontanopaz
-  BACKEND_IMAGE_NAME: ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_OWNER }}/ibell-embalagens-api
+  # CORRIGIDO: Defina o nome completo diretamente aqui
+  BACKEND_IMAGE_NAME: ghcr.io/renanmontanopaz/ibell-embalagens-api
   BACKEND_CONTAINER_NAME: meu-app-backend-spring # Nome do container backend (do docker-compose.yml)
 
 jobs:
