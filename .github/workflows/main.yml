@@ -1,4 +1,4 @@
-name: Build and Deploy to GCP VMs
+name: Build e Deploy para as VMs do GCP
 
 on:
   push:
