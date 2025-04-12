@@ -1,0 +1,87 @@
+name: Build and Deploy to GCP VMs
+
+on:
+  push:
+    branches: [ main ] # Gatilho: push na branch main
+
+env:
+  # --- Configurações do GCP ---
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_REGION: ${{ secrets.GCP_COMPUTE_REGION }}
+  GCP_ZONE: ${{ secrets.GCP_COMPUTE_ZONE }}
+  VM_BACKEND_NAME: vm-backend-db-mensal # Nome da sua VM de backend/db
+  BACKEND_PROJECT_PATH: /home/renanmphp/ibell-embalagens-api # CAMINHO ABSOLUTO para a pasta do projeto na vm-backend-db (onde está o docker-compose.yml)
+
+  # --- Configurações das Imagens Docker (GHCR) ---
+  # Substitua 'SEU_USUARIO_GITHUB' pelo seu nome de usuário ou organização
+  # Substitua 'NOME_DO_REPO' pelo nome do seu repositório
+  GHCR_REGISTRY: ghcr.io
+  GHCR_IMAGE_OWNER: renanmontanopaz
+  BACKEND_IMAGE_NAME: ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_OWNER }}/ibell-embalagens-api
+  BACKEND_CONTAINER_NAME: meu-app-backend-spring # Nome do container backend (do docker-compose.yml)
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # Ler código
+      packages: write # Escrever/Enviar pacotes/imagens Docker para GHCR
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 18 and Maven
+        uses: actions/setup-java@v4
+        with:
+          java-version: '18' # Ajuste para a versão do seu backend
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GHCR_REGISTRY }}
+          username: ${{ github.actor }} # Usuário que iniciou a action
+          password: ${{ secrets.GITHUB_TOKEN }} # Token temporário do GitHub Actions
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # --- Backend Build & Push ---
+      - name: Build and Push Backend Docker Image
+        run: |
+          cd ibell-embalagens-api # Navega para a pasta do backend (AJUSTE SE NECESSÁRIO)
+          git checkout main
+          # Builda a imagem Docker do backend
+          docker build -t ${{ env.BACKEND_IMAGE_NAME }}:latest -t ${{ env.BACKEND_IMAGE_NAME }}:${{ github.sha }} .
+          # Envia as tags para o GHCR
+          docker push ${{ env.BACKEND_IMAGE_NAME }}:latest
+          docker push ${{ env.BACKEND_IMAGE_NAME }}:${{ github.sha }}
+        working-directory: . # Define o diretório base para o 'cd backend'
+
+      # --- Deploy Backend ---
+      - name: Deploy Backend to vm-backend-db via SSH/IAP
+        run: |
+          gcloud compute ssh ${{ env.VM_BACKEND_NAME }} \
+            --zone ${{ env.GCP_ZONE }} \
+            --project ${{ env.GCP_PROJECT_ID }} \
+            --quiet \
+            --tunnel-through-iap \
+            --command="
+              echo '>>> Logging into GHCR...' && \
+              echo '${{ secrets.GITHUB_TOKEN }}' | sudo docker login ${{ env.GHCR_REGISTRY }} -u ${{ github.actor }} --password-stdin && \
+              echo '>>> Pulling new backend image...' && \
+              cd ${{ env.BACKEND_PROJECT_PATH }} && \
+              sudo docker-compose pull backend && \
+              echo '>>> Restarting backend service with docker-compose...' && \
+              sudo docker-compose up -d --force-recreate backend && \
+              echo '>>> Backend deployment potentially complete.' && \
+              echo '>>> Cleaning up old images (optional)...' && \
+              sudo docker image prune -af || echo 'Prune failed, continuing...'
+              "
