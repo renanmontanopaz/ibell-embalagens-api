@@ -17,7 +17,7 @@ env:
   # Substitua 'NOME_DO_REPO' pelo nome do seu repositório
   GHCR_REGISTRY: ghcr.io
   GHCR_IMAGE_OWNER: renanmontanopaz
-  BACKEND_IMAGE_NAME: ${{ env.GHCR_REGISTRY }}/${{ env.GHCR_IMAGE_OWNER }}/ibell-embalagens-api
+  BACKEND_IMAGE_NAME: ghcr.io/renanmontanopaz/ibell-embalagens-api
   BACKEND_CONTAINER_NAME: meu-app-backend-spring # Nome do container backend (do docker-compose.yml)
 
 jobs:
