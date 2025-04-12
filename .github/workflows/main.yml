@@ -56,8 +56,7 @@ jobs:
       # --- Backend Build & Push ---
       - name: Build and Push Backend Docker Image
         run: |
-          cd renan/home/ibell-embalagens-api # Navega para a pasta do backend (AJUSTE SE NECESSÁRIO)
-          git checkout main
+          cd backend # Navega para a pasta do backend (AJUSTE SE NECESSÁRIO)
           # Builda a imagem Docker do backend
           docker build -t ${{ env.BACKEND_IMAGE_NAME }}:latest -t ${{ env.BACKEND_IMAGE_NAME }}:${{ github.sha }} .
           # Envia as tags para o GHCR
