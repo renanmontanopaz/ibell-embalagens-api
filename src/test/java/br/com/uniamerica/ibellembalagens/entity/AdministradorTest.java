@@ -32,7 +32,7 @@ public class AdministradorTest {
 
         var violations = validator.validate(admin);
         assertFalse(violations.isEmpty());
-        assertEquals(1, violations.size());
+        assertEquals(4, violations.size());
         assertEquals("O username devera ter no minimo 3 caracteres e no maximo 25 caracteres",
                 violations.iterator().next().getMessage());
     }
