@@ -3,38 +3,33 @@ version: '3.3'
 services:
   backend:
     build:
-      context: ./ # Verifique se o Dockerfile do Spring Boot está aqui
-    container_name: meu-app-backend-spring # Nome opcional para o container
+      context: ./
+    container_name: meu-app-backend-spring
     ports:
-      - "8080:8080" # Mapeia a porta 8080 do container para a VM
+      - "8080:8080"
     networks:
       - app-net
     depends_on:
-      - database # Garante que o banco inicie antes
+      - database
     environment:
-      # --- Variáveis para Conexão com PostgreSQL ---
-      # Use o nome do serviço 'database' como host
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/ibell-embalagens # Substitua meu_banco_app se necessário
-      - SPRING_DATASOURCE_USERNAME=postgres # Substitua pelo nome de usuário desejado
-      - SPRING_DATASOURCE_PASSWORD=52354867 # Substitua pela senha desejada
-      # Adicione outras variáveis que seu Spring Boot precise
-      # - SERVER_PORT=8080 # Opcional se já for o padrão
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/${SPRING_DATASOURCE_DB}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USER}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
     restart: unless-stopped
 
   database:
-    image: postgres:14-alpine # Use uma versão específica do Postgres
-    container_name: meu-postgres-db # Nome opcional
+    image: postgres:14-alpine
+    container_name: meu-postgres-db
     ports:
-      - "5432:5432" # Mapeia a porta 5432 (útil para debug via SSH)
+      - "5432:5432"
     networks:
       - app-net
     environment:
-      # --- Criação do Banco e Usuário no PostgreSQL ---
-      - POSTGRES_DB=ibell-embalagens # Nome do banco a ser criado
-      - POSTGRES_USER=postgres # Nome do usuário a ser criado
-      - POSTGRES_PASSWORD=52354867 # Senha para o usuário
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - postgres-data:/var/lib/postgresql/data # Persistência dos dados
+      - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
 
 networks:
@@ -42,4 +37,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres-data: # Define o volume nomeado
+  postgres-data:
