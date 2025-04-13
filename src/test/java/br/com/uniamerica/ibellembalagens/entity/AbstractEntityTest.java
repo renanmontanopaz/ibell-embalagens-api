@@ -9,7 +9,6 @@ public class AbstractEntityTest {
 
     @Test
     public void testPrePersist() {
-        // Criando uma classe concreta para testar AbstractEntity
         class ConcreteEntity extends AbstractEntity {}
 
         ConcreteEntity entity = new ConcreteEntity();
@@ -22,7 +21,6 @@ public class AbstractEntityTest {
 
     @Test
     public void testPreUpdate() {
-        // Criando uma classe concreta para testar AbstractEntity
         class ConcreteEntity extends AbstractEntity {}
 
         ConcreteEntity entity = new ConcreteEntity();
@@ -35,12 +33,10 @@ public class AbstractEntityTest {
 
     @Test
     public void testGettersAndSetters() {
-        // Criando uma classe concreta para testar AbstractEntity
         class ConcreteEntity extends AbstractEntity {}
 
         ConcreteEntity entity = new ConcreteEntity();
 
-        // Testando setters e getters
         Long id = 1L;
         Boolean active = true;
         LocalDateTime register = LocalDateTime.now();
