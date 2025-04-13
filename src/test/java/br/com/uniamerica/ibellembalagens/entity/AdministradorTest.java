@@ -27,7 +27,7 @@ public class AdministradorTest {
     @Test
     public void testInvalidUsernameLength() {
         Administrator admin = new Administrator();
-        admin.setUsername("a"); // Muito curto
+        admin.setUsername("a");
         admin.setPassword("validPass123");
 
         var violations = validator.validate(admin);
@@ -41,7 +41,7 @@ public class AdministradorTest {
     public void testInvalidPasswordLength() {
         Administrator admin = new Administrator();
         admin.setUsername("validUser");
-        admin.setPassword("a"); // Muito curto
+        admin.setPassword("a");
 
         var violations = validator.validate(admin);
         assertFalse(violations.isEmpty());
