@@ -3,6 +3,8 @@ name: Build e Deploy para as VMs do GCP
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 env:
   GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
